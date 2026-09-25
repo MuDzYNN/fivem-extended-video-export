@@ -405,19 +405,20 @@ HRESULT IMFSinkWriterHooks::SetInputMediaType::Implementation(IMFSinkWriter* pTh
                 GUID pixelFormat;
                 ::exportContext->video_media_type->GetGUID(MF_MT_SUBTYPE, &pixelFormat);
 
-                // if (isCustomFrameRateSupported) {
-                //     auto fps = config::fps;
-                //     fps_num = fps.first;
-                //     fps_den = fps.second;
+                if (isCustomFrameRateSupported) {
+                    auto fps = config::fps;
+                    fps_num = fps.first;
+                    fps_den = fps.second;
 
-                //    float gameFrameRate =
-                //        ((float)fps.first * ((float)config::motion_blur_samples + 1) / (float)fps.second);
-                //    if (gameFrameRate > 60.0f) {
-                //        LOG(LL_NON, "fps * (motion_blur_samples + 1) > 60.0!!!");
-                //        LOG(LL_NON, "Audio export will be disabled!!!");
-                //        ::exportContext->isAudioExportDisabled = true;
-                //    }
-                //}
+                    float gameFrameRate =
+                        (static_cast<float>(fps.first) * (static_cast<float>(config::motion_blur_samples) + 1) /
+                         static_cast<float>(fps.second));
+                    if (gameFrameRate > 60.0f) {
+                        LOG(LL_NON, "fps * (motion_blur_samples + 1) > 60.0!!!");
+                        LOG(LL_NON, "Audio export will be disabled!!!");
+                        ::exportContext->is_audio_export_disabled = true;
+                    }
+                }
 
                 UINT32 blockAlignment, numChannels, sampleRate, bitsPerSample;
                 GUID subType;
